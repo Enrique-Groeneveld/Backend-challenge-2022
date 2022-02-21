@@ -1,6 +1,9 @@
 <?
-require_once '../models/lists.php';
+    require_once '../models/lists.php';
 
-$test = getall();
 
-var_dump($test);
+function index(){
+    $test2 = "thoughts";
+    loadView('index');
+}
+
