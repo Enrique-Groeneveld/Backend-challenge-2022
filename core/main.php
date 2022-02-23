@@ -26,10 +26,16 @@ function getWhere($where){
     return $data;
 }
 
+function insert(){
+    $body= file_get_contents("php://input"); 
+    $data = json_decode($body, true);
+    clean($data);
+    response(200,"okidoki",$data);
+}
+
 function loadView($filename, $data = null)
 {
 	if ($data) {
-
 		foreach($data as $key => $value) {
 			$$key = $value;
 		}
@@ -51,3 +57,10 @@ function response($status,$status_message,$data)
 	$json_response = json_encode($response);
 	echo $json_response;
 }
+    
+function clean(&$data){
+    // $data = mysql_real_escape_string($data);
+    $data = stripslashes($data);
+    $data = htmlentities($data);
+    return $data;
+} 
