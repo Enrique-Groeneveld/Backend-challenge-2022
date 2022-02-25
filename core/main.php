@@ -29,8 +29,24 @@ function getWhere($where){
 function insert(){
     $body= file_get_contents("php://input"); 
     $data = json_decode($body, true);
-    clean($data);
-    response(200,"okidoki",$data);
+    $listentries = "";
+    $values = " ";
+    foreach ($data as $varname => $single){
+        clean($single);
+        $test = $single;
+        $listentries .= '`'.$varname.'`';
+        $values .= '"'.$single.'"';
+    }
+    $conn = connect();
+    $sql = "INSERT INTO `".$GLOBALS['table']."` (".$listentries.") VALUES (".$values.")";
+    $conn->prepare($sql);
+    $result = $conn->query($sql);
+    
+    mysqli_close($conn);
+    // INSERT INTO `to-do`.`list-entries` (`list_id`, `order`, `text`) VALUES ('8', '0', 'ez');
+
+
+    response($result,"okidoki",$data);
 }
 
 function loadView($filename, $data = null)
@@ -58,9 +74,11 @@ function response($status,$status_message,$data)
 	echo $json_response;
 }
     
-function clean(&$data){
-    // $data = mysql_real_escape_string($data);
+function clean($data) {
+    $data = filter_var($data,
+    FILTER_SANITIZE_STRING);
+    $data = trim($data);
     $data = stripslashes($data);
-    $data = htmlentities($data);
+    $data = htmlspecialchars($data);
     return $data;
-} 
+}
