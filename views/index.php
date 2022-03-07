@@ -82,6 +82,8 @@
 				}).then((data) => { 	
 					console.log(data);					
 				});
+				this.lists = this.getLists();
+
 			},
 			addRow: function (id) {
 				Vue.http.post(this.url + 'list-entry/insert', {
@@ -91,6 +93,7 @@
 					console.log(data);					
 				});
 				this.lists = this.getLists();
+				this.modalText = '';
 				console.log(id);
 			},
 
