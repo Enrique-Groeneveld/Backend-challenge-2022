@@ -34,9 +34,11 @@ function insert(){
     foreach ($data as $varname => $single){
         clean($single);
         $test = $single;
-        $listentries .= '`'.$varname.'`';
-        $values .= '"'.$single.'"';
+        $listentries .= '`'.$varname.'`,';
+        $values .= '"'.$single.'",';
     }
+    $listentries = rtrim($listentries, ',');
+    $values = rtrim($values, ',');
     $conn = connect();
     $sql = "INSERT INTO `".$GLOBALS['table']."` (".$listentries.") VALUES (".$values.")";
     $conn->prepare($sql);
@@ -64,6 +66,7 @@ function loadView($filename, $data = null)
 
 function response($status,$status_message,$data)
 {
+    
 	header("HTTP/1.1 ".$status);
 	
 	$response['status']=$status;
