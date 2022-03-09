@@ -12,6 +12,23 @@ function getAll(){
     return $data;
 }
 
+function delete($id){
+    $message = '';
+    $status = '';
+    $result = '';
+    if(!ctype_digit($id)){
+        $status = 400;
+        $message = "Not integer nice try!";
+    }
+    else{
+        $conn = connect();
+        $sql = "DELETE FROM `".$GLOBALS['table']."` WHERE `id` = ".$id."";
+        $status = $conn->query($sql);
+        mysqli_close($conn);
+    }
+    response($status, $message ,$result);
+}
+
 function getWhere($where){
     $conn = connect();
     $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."";
