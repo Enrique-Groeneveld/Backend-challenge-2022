@@ -7,26 +7,37 @@
 	<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
 </head>
 <body>
-	<div class="container" id="app">
-	<div class="row">
-		
-		<div class="card col-sm-6" v-for='(item, index) in lists'>
-				<div class="card-body">
-				
-					<h5 class="card-title">Titel: {{item.title}} <i style="font-size: 3em; color:tomato;" class="fas fa-trash-can"></i></h5>
-				</div>
+		<nav class="navbar navbar-dark bg-dark">
+			<a class="navbar-brand col-12" href="#">Navbar</a>
+		</nav>
+
+	<div class="container " id="app">
+		<i  @click="HideUnhide" class="fas fa-edit  text-right">  Edit rows or lists</i>		
+
+		<h1> {{ appName }} </h1>
+		<div class="input-group mb-3">
+			<span class="input-group-text" id="basic-addon1">{{name}}</span>
+			<input v-model="title" type="text" class="form-control" placeholder="List name" aria-label="List name" >
+			<input type="button" value="Stuur naam naar database" v-on:click="postData">
+		</div>
+
+		<div class="row d-flex justify-content-center">
+			<!-- Start list card -->
+			<div class="card col-3 m-4 p-2 " v-for='(item, index) in lists'>
+				<h5 class="card-title">{{item.title}}</h5>
 				<ul  class="list-group list-group-flush" >
 					<li class="list-group-item" v-for='(entry, index) in item.entries' v-if="entry.text"> 
 						{{entry.text}}
-						<button>
-							<i class="fa-solid fa-trash-can"></i>					
-						</button>
+						<!-- Delete button -->
+						<i @click="deleteEntry(entry.id)" v-show="hidden" style="float:right" class="fas fa-trash-alt text-danger "></i>		
 					</li>
 				</ul>
-				
+
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#exampleModal' + item.id">
-					Add row
+					Add step <i class="fas fa-plus-square"></i>
 				</button>	
+
+				<!-- Start modal -->
 				<div class="modal fade"	:id="'exampleModal' + item.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -43,26 +54,16 @@
 						</div>
 					</div>
 				</div>
+				<!-- End modal -->
+			</div>
+			<!-- End card list -->
 		</div>
-		
-
-		<!-- Modal -->
-		
-	</div>
 
 
-	<!-- Binding Text - Semantic -->
-		<h1> {{ appName }} </h1>
-		
-		
-		<div class="input-group mb-3">
-			<span class="input-group-text" id="basic-addon1">{{name}}</span>
-			<input v-model="title" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-			<input type="button" value="Stuur naam naar database" v-on:click="postData">
-		</div>
+		<!-- Binding Text - Semantic -->
+	
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
 </body>
 <script type="text/javascript">
 	Vue.config.devtools = true;
@@ -72,6 +73,7 @@
 		el: '#app',   // or document.getElementById('app')
 					// Data property  - accessible in console: content.data.appName or content.appName
 		data: {
+			hidden: false,
 			name: '@',
 			title: '',
 			modalText: '',
@@ -81,6 +83,17 @@
 			entriesWithList: '',
 		},
 		methods: {
+			HideUnhide: function () {
+				this.hidden = this.hidden ? false : true;
+			},
+			deleteEntry: function (id){
+				console.log(id);
+				this.$http.get(this.url + 'list-entry/delete/'+id).then((data) => { 	
+					data = (JSON.parse(data.data));
+					console.log(data);
+					this.lists = this.getLists();
+				});	
+			},
 			postData: function () {
 
 				Vue.http.post(this.url + 'list/insert', {

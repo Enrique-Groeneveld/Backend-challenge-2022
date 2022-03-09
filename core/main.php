@@ -17,7 +17,7 @@ function delete($id){
     $status = '';
     $result = '';
     if(!ctype_digit($id)){
-        $status = 400;
+        $status = 500;
         $message = "Not integer nice try!";
     }
     else{
@@ -25,6 +25,9 @@ function delete($id){
         $sql = "DELETE FROM `".$GLOBALS['table']."` WHERE `id` = ".$id."";
         $status = $conn->query($sql);
         mysqli_close($conn);
+        if($status){
+            $status = 200;
+        }
     }
     response($status, $message ,$result);
 }
