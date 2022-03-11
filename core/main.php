@@ -22,7 +22,8 @@ function delete($id){
     }
     else{
         $conn = connect();
-        $sql = "DELETE FROM `".$GLOBALS['table']."` WHERE `id` = ".$id."";
+        $sql = "DELETE FROM `".$GLOBALS['table']."` WHERE `id` = ".$id;
+        var_dump($sql);
         $status = $conn->query($sql);
         mysqli_close($conn);
         if($status){
@@ -42,7 +43,7 @@ function getWhere($where){
     foreach($result as $test){
         array_push($data, $test);
     }
-    response(200,"okidoki",$data);
+    // response(200,"okidoki",$data);
     return $data;
 }
 
@@ -63,12 +64,42 @@ function insert(){
     $sql = "INSERT INTO `".$GLOBALS['table']."` (".$listentries.") VALUES (".$values.")";
     $conn->prepare($sql);
     $result = $conn->query($sql);
-    
+    $result ? 200 : 500;
     mysqli_close($conn);
     // INSERT INTO `to-do`.`list-entries` (`list_id`, `order`, `text`) VALUES ('8', '0', 'ez');
 
 
     response($result,"okidoki",$data);
+}
+
+function update($id){
+
+//     UPDATE table_name
+// SET column1 = value1, column2 = value2, ...
+// WHERE condition;
+    $body= file_get_contents("php://input"); 
+    $data = json_decode($body, true);
+    clean($data);
+
+    $values = '';
+    foreach ($data as $varname => $single){
+        $column = '`'.$varname.'`';
+        $value = '"'.$single.'"';
+        $total = $column.'='.$value.',';
+        $values .= $total;
+    }    
+    $values = rtrim($values, ',');
+
+    $conn = connect();
+    $sql = "UPDATE `".$GLOBALS['table']."` SET $values WHERE `id` = ".$id."";
+    echo $sql;
+    $result = $conn->query($sql);
+    mysqli_close($conn);
+    $data = array();
+    
+
+    response(200,"okidoki",$data);
+    return $data;
 }
 
 function loadView($filename, $data = null)
