@@ -146,7 +146,7 @@
 		el: '#app',   // or document.getElementById('app')
 					// Data property  - accessible in console: content.data.appName or content.appName
 		data: {
-			hidden: true,
+			hidden: false,
 			entry:'',
 			sort:null,
 			sort2:null,
