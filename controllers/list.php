@@ -7,20 +7,23 @@ function index(){
     loadView('index');
 }
 
-function getEntriesWithLists(){
+function getEntriesWithLists($sort = null, $sort2 = null){
     $lists =  getAll();
     $data = Array();
     require_once '../models/list-entries.php';  
     foreach ($lists as $list){  
         $list['entries'] = array();
         $where = '`list_id` =' . $list['id'];
-        $entries = getWhere($where);
+        $entries = getWhere($where,$sort,$sort2);
         foreach ($entries as $entrie){
+            $entrie['duration'] = date('H:i', strtotime($entrie['duration']));
+            $entrie['status'] ? $entrie['status'] = true : $entrie['status'] = false;
             array_push($list['entries'], $entrie);
         }
         array_push($data, $list);
     }
     ob_end_clean();
+    
     response(200,"okidoki",$data);
 }
 

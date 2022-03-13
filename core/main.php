@@ -33,13 +33,31 @@ function delete($id){
     response($status, $message ,$result);
 }
 
-function getWhere($where){
+function getWhere($where, $sort = null, $sort2 = null){
+    
+    if ($GLOBALS['table'] == "list-entries"){
+        if (!is_null($sort) && $sort !== "null"){
+            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `status`".$sort."";
+        }
+        else if (!is_null($sort2) && $sort2 !== "null"){
+            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `duration`".$sort2."";
+        }
+
+        else if ((!is_null($sort2) && $sort2 !== "null" ) && (!is_null($sort ) && $sort !== "null") ){
+            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `duration`".$sort.", `status`".$sort2."";
+        }
+        else {
+            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."";
+        }
+    }
+    else {
+        $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."";
+    }
+    
     $conn = connect();
-    $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."";
     $result = $conn->query($sql);
     mysqli_close($conn);
     $data = array();
-    
     foreach($result as $test){
         array_push($data, $test);
     }
@@ -64,9 +82,8 @@ function insert(){
     $sql = "INSERT INTO `".$GLOBALS['table']."` (".$listentries.") VALUES (".$values.")";
     $conn->prepare($sql);
     $result = $conn->query($sql);
-    $result ? 200 : 500;
+    $result ? $result = 200 : $result = 500;
     mysqli_close($conn);
-    // INSERT INTO `to-do`.`list-entries` (`list_id`, `order`, `text`) VALUES ('8', '0', 'ez');
 
 
     response($result,"okidoki",$data);
@@ -83,10 +100,19 @@ function update($id){
 
     $values = '';
     foreach ($data as $varname => $single){
-        $column = '`'.$varname.'`';
-        $value = '"'.$single.'"';
-        $total = $column.'='.$value.',';
-        $values .= $total;
+        if($varname == "status"){
+            $column = '`'.$varname.'`';
+            $value = ''.$single.'';
+            $total = $column.' = '.$value.',';
+            $values .= $total;
+        }
+        else{
+            $column = '`'.$varname.'`';
+            $value = '"'.$single.'"';
+            $total = $column.'='.$value.',';
+            $values .= $total;
+        }
+       
     }    
     $values = rtrim($values, ',');
 
