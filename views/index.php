@@ -16,7 +16,7 @@
 			 Sort time <i class="fas fa-clock"></i> <i v-if="sort == 'ASC'" class="fas fa-caret-down"></i><i v-if="sort == 'DESC'" class="fas fa-caret-up"></i>
 	</button>
 	<button type="button" class="btn btn-secondary" @click="sortStatus()">
-	Sort status <i class="fas fa-clock"></i>
+	Sort status <i class="fas fa-clock"></i>  <i v-if="sort2 == 'ASC'" class="fas fa-caret-down"></i><i v-if="sort2 == 'DESC'" class="fas fa-caret-up"></i>
 	</button>
 	<button type="button" class="btn btn-secondary" @click="HideUnhide">
 	<i   class="fas fa-edit  text-right">  Edit rows or lists</i>	
