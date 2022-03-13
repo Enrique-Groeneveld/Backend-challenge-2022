@@ -37,10 +37,10 @@ function getWhere($where, $sort = null, $sort2 = null){
     
     if ($GLOBALS['table'] == "list-entries"){
         if (!is_null($sort) && $sort !== "null"){
-            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `status`".$sort."";
+            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `duration`".$sort."";
         }
         else if (!is_null($sort2) && $sort2 !== "null"){
-            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `duration`".$sort2."";
+            $sql = "SELECT * FROM `".$GLOBALS['table']."` WHERE ".$where."  ORDER BY `status`".$sort2."";
         }
 
         else if ((!is_null($sort2) && $sort2 !== "null" ) && (!is_null($sort ) && $sort !== "null") ){
