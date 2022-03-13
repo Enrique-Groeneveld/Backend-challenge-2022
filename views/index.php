@@ -16,7 +16,7 @@
 			 Sort time <i class="fas fa-clock"></i> <i v-if="sort == 'ASC'" class="fas fa-caret-down"></i><i v-if="sort == 'DESC'" class="fas fa-caret-up"></i>
 	</button>
 	<button type="button" class="btn btn-secondary" @click="sortStatus()">
-	{{sort2}}Sort status <i class="fas fa-clock"></i>
+	Sort status <i class="fas fa-clock"></i>
 	</button>
 	<button type="button" class="btn btn-secondary" @click="HideUnhide">
 	<i   class="fas fa-edit  text-right">  Edit rows or lists</i>	
@@ -182,7 +182,6 @@
 				});	
 			},
 			sortTime: function () {
-				this.getLists();
 				if (this.sort == null){
 					this.sort = "ASC"
 				}
@@ -190,23 +189,23 @@
 				else if (this.sort == "ASC"){
 					this.sort = "DESC"
 				}
-				else{
+				else if (this.sort == "DESC"){
 					this.sort = null;
 				}
+				this.getLists();
+
 			},
 			sortStatus: function () {
-				console.log('test');
-				this.getLists();
 				if (this.sort2 == null){
 					this.sort2 = "ASC"
 				}
-
 				else if (this.sort2 == "ASC"){
 					this.sort2 = "DESC"
 				}
-				else{
+				else if(this.sort2 == "DESC"){
 					this.sort2 = null
 				}
+				this.getLists();
 			},
 
 			sendData: function (item){
